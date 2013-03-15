@@ -22,7 +22,7 @@ class MyApp(wx.App):
         self.txtDirector = xrc.XRCCTRL(self.frame, 'txtDirector')
         self.txtRunTime = xrc.XRCCTRL(self.frame, 'txtRunTime')
         self.txtPlot = xrc.XRCCTRL(self.frame, 'txtPlot')
-        self.btnSearch = xrc.XRCCTRL(self.frame, 'btnAnother')
+        self.btnSearch = xrc.XRCCTRL(self.frame, 'btnSearch')
         self.btnExit = xrc.XRCCTRL(self.frame, 'wxID_EXIT')
         self.statusBar = xrc.XRCCTRL(self.frame, 'statusBar')
 
@@ -32,6 +32,7 @@ class MyApp(wx.App):
         self.Bind(wx.EVT_BUTTON, self.OnSearchClick, self.btnSearch)
         self.txtTitle.Bind(wx.EVT_KEY_DOWN, self.OnTitleChange)        
         
+        self.statusBar.SetStatusText('Ready')
         self.frame.Show()
 
     def get_movie (self, title):
