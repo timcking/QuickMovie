@@ -36,6 +36,19 @@ class MyApp(wx.App):
         
         self.statusBar.SetStatusText('Ready')
         self.frame.Show()
+        
+    def get_movie(self, movie_id):
+        ia = imdb.IMDb()
+        
+        s_result = ia.get_movie(movie_id)
+        print ("movie_id: %s" % (movie_id))
+        # TODO: Cast, check for each null
+        # TODO: Merge with search_movie
+        print s_result['director'][0]
+        self.txtDirector.SetValue('%s' % s_result['director'][0])
+        self.txtYear.SetValue('%s' % s_result['year'])
+        self.txtRunTime.SetValue('%s min' % s_result['runtime'][0])
+        self.txtPlot.SetValue('%s' % s_result['plot outline'])
 
     def search_movie (self, title):
         myCursor= wx.StockCursor(wx.CURSOR_WAIT)
@@ -59,7 +72,6 @@ class MyApp(wx.App):
         # For now, only interested in the first result
         movie = s_result[0]
         ia.update(movie)
-        # print movie.movieID
         
         self.cboTitle.SetValue('%s' % movie['title'])
         self.txtYear.SetValue('%s' % movie['year'])
@@ -103,7 +115,7 @@ class MyApp(wx.App):
         # TODO: change movie info in form when this is clicked
         selected = self.cboTitle.GetSelection()
         movieID = self.dictTitles[selected]
-        print ("movieID: %s" % (movieID))
+        self.get_movie(movieID)
                  
     def OnClose(self, evt):
         self.Exit()
