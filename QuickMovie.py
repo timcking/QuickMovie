@@ -37,7 +37,7 @@ class MyApp(wx.App):
         self.statusBar.SetStatusText('Ready')
         self.frame.Show()
 
-    def get_movie (self, title):
+    def search_movie (self, title):
         myCursor= wx.StockCursor(wx.CURSOR_WAIT)
         self.frame.SetCursor(myCursor)
         self.statusBar.SetStatusText('Searching ...')
@@ -91,7 +91,7 @@ class MyApp(wx.App):
             self.cboTitle.SetFocus()       
         else:
             self.cboTitle.Clear()
-            self.get_movie(self.title)
+            self.search_movie(self.title)
      
     def OnTitleChange(self, event): 
         # Clear all other fields if title is changed and director is not already empty
@@ -101,7 +101,9 @@ class MyApp(wx.App):
         
     def OnComboTitles(self, event):
         # TODO: change movie info in form when this is clicked
-        print "Clicked"
+        selected = self.cboTitle.GetSelection()
+        movieID = self.dictTitles[selected]
+        print ("movieID: %s" % (movieID))
                  
     def OnClose(self, evt):
         self.Exit()
