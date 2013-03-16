@@ -3,6 +3,7 @@ import wx
 from wx import xrc
 
 class MyApp(wx.App):
+    dictTitles = {}
 
     def OnInit(self):
         self.res = xrc.XmlResource('QuickMovie.xrc')
@@ -16,7 +17,7 @@ class MyApp(wx.App):
         self.frame.SetIcon(self.favicon)    
 
         # Bind Controls
-        self.txtTitle = xrc.XRCCTRL(self.frame, 'txtTitle')
+        self.cboTitle = xrc.XRCCTRL(self.frame, 'cboTitle')
         self.listCast = xrc.XRCCTRL(self.frame, 'listCast')
         self.txtYear = xrc.XRCCTRL(self.frame, 'txtYear')
         self.txtDirector = xrc.XRCCTRL(self.frame, 'txtDirector')
@@ -30,7 +31,8 @@ class MyApp(wx.App):
         self.frame.Bind(wx.EVT_BUTTON, self.OnClose, id=xrc.XRCID('wxID_EXIT'))
         self.frame.Bind(wx.EVT_CLOSE, self.OnExitApp)
         self.Bind(wx.EVT_BUTTON, self.OnSearchClick, self.btnSearch)
-        self.txtTitle.Bind(wx.EVT_KEY_DOWN, self.OnTitleChange)        
+        self.cboTitle.Bind(wx.EVT_KEY_DOWN, self.OnTitleChange)        
+        self.cboTitle.Bind(wx.EVT_COMBOBOX, self.OnComboTitles, id=xrc.XRCID('cboTitle'))
         
         self.statusBar.SetStatusText('Ready')
         self.frame.Show()
@@ -47,11 +49,19 @@ class MyApp(wx.App):
         # Search for a movie (get a list of Movie objects).
         s_result = ia.search_movie(title)
         
-        # Only interested in the first result
+        index_count = 0
+        for title in s_result:
+            self.cboTitle.Append("%s, %s" % (title, title['year']))
+            # Save for when box is clicked
+            self.dictTitles[index_count] = title.movieID
+            index_count += 1                    
+        
+        # For now, only interested in the first result
         movie = s_result[0]
         ia.update(movie)
+        # print movie.movieID
         
-        self.txtTitle.SetValue('%s' % movie['title'])
+        self.cboTitle.SetValue('%s' % movie['title'])
         self.txtYear.SetValue('%s' % movie['year'])
         self.txtDirector.SetValue('%s' % movie['director'][0])
         self.txtRunTime.SetValue('%s min' % movie['runtime'][0])
@@ -75,11 +85,12 @@ class MyApp(wx.App):
         self.listCast.Clear()
          
     def OnSearchClick(self, event): 
-        self.title = self.txtTitle.GetValue()
+        self.title = self.cboTitle.GetValue()
         if self.title == '':
             self.statusBar.SetStatusText("Title is required")
-            self.txtTitle.SetFocus()       
+            self.cboTitle.SetFocus()       
         else:
+            self.cboTitle.Clear()
             self.get_movie(self.title)
      
     def OnTitleChange(self, event): 
@@ -87,6 +98,10 @@ class MyApp(wx.App):
         if self.txtDirector <> '':
             self.clear_fields()
         event.Skip()    
+        
+    def OnComboTitles(self, event):
+        # TODO: change movie info in form when this is clicked
+        print "Clicked"
                  
     def OnClose(self, evt):
         self.Exit()
