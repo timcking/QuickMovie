@@ -84,6 +84,24 @@ class MyApp(wx.App):
         self.frame.SetCursor(myCursor)            
         self.statusBar.SetStatusText('Ready')    
         
+    def get_person(self, person_id):
+        myCursor= wx.StockCursor(wx.CURSOR_WAIT)
+        self.frame.SetCursor(myCursor)
+        self.statusBar.SetStatusText('Searching ...')
+        
+        # TODO, do something with this
+        s_result = self.movieData.get_person_data(person_id)
+        print s_result['birth name']
+        print s_result['birth date']
+        print s_result['mini biography']
+        print s_result['full-size headshot']
+        print s_result['headshot']
+        
+        # Set mousepointer to normal
+        myCursor= wx.StockCursor(wx.CURSOR_ARROW)
+        self.frame.SetCursor(myCursor)            
+        self.statusBar.SetStatusText('Ready')    
+        
     def load_fields(self, results):
         self.cboTitle.SetValue('%s' % results['title'])
         self.txtYear.SetValue('%s' % results['year'])
@@ -129,8 +147,8 @@ class MyApp(wx.App):
     def OnListCast(self, event):
         selected = self.listCast.GetSelection()
         personID = self.dictCast[selected]
-        print personID
         # TODO
+        self.get_person(personID)
                  
     def OnClose(self, evt):
         self.Exit()
@@ -139,5 +157,6 @@ class MyApp(wx.App):
         self.Exit()
         
 if __name__ == '__main__':
-    app = MyApp()
+    # The False argument says redirect stdout/stderr to a console instead of a window
+    app = MyApp(False)
     app.MainLoop()
