@@ -64,7 +64,12 @@ class MyApp(wx.App):
         self.statusBar.SetStatusText('Searching ...')
         
         # Search for a movie (get a list of Movie objects).
-        s_result = self.movieData.search_movie_data(title)
+        try:
+            s_result = self.movieData.search_movie_data(title)
+        except Exception, e:
+            # TODO
+            print "Search failed"
+            return
         
         index_count = 0
         for title in s_result:
@@ -91,11 +96,27 @@ class MyApp(wx.App):
         
         # TODO, do something with this
         s_result = self.movieData.get_person_data(person_id)
-        print s_result['birth name']
-        print s_result['birth date']
-        print s_result['mini biography']
-        print s_result['full-size headshot']
-        print s_result['headshot']
+        
+        try:
+            print s_result['birth name']
+        except Exception, e:
+            print "birth name not found"
+        try:
+            print s_result['birth date']
+        except Exception, e:
+            print "birth date not found"
+        try:
+            print s_result['birth notes']
+        except Exception, e:
+            print "birth notes not found"
+        try:
+            print s_result['mini biography']
+        except Exception, e:
+            print "mini biography not found"
+        try:
+            print s_result['headshot']
+        except Exception, e:
+            print "headshot not found"
         
         # Set mousepointer to normal
         myCursor= wx.StockCursor(wx.CURSOR_ARROW)
