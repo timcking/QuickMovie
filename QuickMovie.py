@@ -1,11 +1,11 @@
-import imdb
 import wx
 from wx import xrc
+from MovieData import MovieData
 
 class MyApp(wx.App):
     dictTitles = {}
     dictCast = {}
-
+    
     def OnInit(self):
         self.res = xrc.XmlResource('QuickMovie.xrc')
         self.init_frame()
@@ -35,8 +35,10 @@ class MyApp(wx.App):
         self.cboTitle.Bind(wx.EVT_KEY_DOWN, self.OnTitleChange)
         self.cboTitle.Bind(wx.EVT_COMBOBOX, self.OnComboTitles, id=xrc.XRCID('cboTitle'))
         self.listCast.Bind(wx.EVT_LISTBOX, self.OnListCast, id=xrc.XRCID('listCast'))
-        
         self.statusBar.SetStatusText('Ready')
+        
+        self.movieData = MovieData()
+        
         self.frame.Show()
         
     def get_movie(self, movie_id):
@@ -45,8 +47,7 @@ class MyApp(wx.App):
         self.frame.SetCursor(myCursor)
         self.statusBar.SetStatusText('Searching ...')
         
-        ia = imdb.IMDb()
-        s_result = ia.get_movie(movie_id)
+        s_result = self.movieData.get_movie_data(movie_id)
         
         print ("movie_id: %s" % (movie_id))
         # TODO: Cast, check for each null
@@ -62,12 +63,8 @@ class MyApp(wx.App):
         self.frame.SetCursor(myCursor)
         self.statusBar.SetStatusText('Searching ...')
         
-        # Create the object that will be used to access the IMDb's database.
-        # By default access the web.
-        ia = imdb.IMDb()
-        
         # Search for a movie (get a list of Movie objects).
-        s_result = ia.search_movie(title)
+        s_result = self.movieData.search_movie_data(title)
         
         index_count = 0
         for title in s_result:
@@ -78,7 +75,7 @@ class MyApp(wx.App):
         
         # For now, only display in the first result
         movie = s_result[0]
-        ia.update(movie)
+        self.movieData.update_movie_data(movie)
         
         self.load_fields(movie)
             
@@ -142,5 +139,5 @@ class MyApp(wx.App):
         self.Exit()
         
 if __name__ == '__main__':
-    app = MyApp(False)
+    app = MyApp()
     app.MainLoop()
