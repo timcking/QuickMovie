@@ -1,6 +1,7 @@
 import wx
 from wx import xrc
 from MovieData import MovieData
+from Person import Person
 
 class MyApp(wx.App):
     dictTitles = {}
@@ -89,49 +90,15 @@ class MyApp(wx.App):
         self.frame.SetCursor(myCursor)            
         self.statusBar.SetStatusText('Ready')    
         
-    def get_person(self, person_id):
-        myCursor= wx.StockCursor(wx.CURSOR_WAIT)
-        self.frame.SetCursor(myCursor)
-        self.statusBar.SetStatusText('Searching ...')
-        
-        # TODO, do something with this
-        s_result = self.movieData.get_person_data(person_id)
-        
-        try:
-            print s_result['birth name']
-        except Exception, e:
-            print "birth name not found"
-        try:
-            print s_result['birth date']
-        except Exception, e:
-            print "birth date not found"
-        try:
-            print s_result['birth notes']
-        except Exception, e:
-            print "birth notes not found"
-        try:
-            print s_result['mini biography']
-        except Exception, e:
-            print "mini biography not found"
-        try:
-            print s_result['headshot']
-        except Exception, e:
-            print "headshot not found"
-        
-        # Set mousepointer to normal
-        myCursor= wx.StockCursor(wx.CURSOR_ARROW)
-        self.frame.SetCursor(myCursor)            
-        self.statusBar.SetStatusText('Ready')    
-        
-    def load_fields(self, results):
-        self.cboTitle.SetValue('%s' % results['title'])
-        self.txtYear.SetValue('%s' % results['year'])
-        self.txtDirector.SetValue('%s' % results['director'][0])
-        self.txtRunTime.SetValue('%s min' % results['runtime'][0])
-        self.txtPlot.SetValue('%s' % results['plot outline'])
+    def load_fields(self, result):
+        self.cboTitle.SetValue('%s' % result['title'])
+        self.txtYear.SetValue('%s' % result['year'])
+        self.txtDirector.SetValue('%s' % result['director'][0])
+        self.txtRunTime.SetValue('%s min' % result['runtime'][0])
+        self.txtPlot.SetValue('%s' % result['plot outline'])
         
         index_count = 0
-        for person in results['cast']:
+        for person in result['cast']:
             self.listCast.Append('%s' % person['name'])
             # Save for when cast is clicked
             self.dictCast[index_count] = person.personID
@@ -166,11 +133,22 @@ class MyApp(wx.App):
         self.get_movie(movieID)
         
     def OnListCast(self, event):
+        myCursor= wx.StockCursor(wx.CURSOR_WAIT)
+        self.frame.SetCursor(myCursor)
+        self.statusBar.SetStatusText('Searching ...')
+        
         selected = self.listCast.GetSelection()
         personID = self.dictCast[selected]
-        # TODO
-        self.get_person(personID)
-                 
+        
+        s_result = self.movieData.get_person_data(personID)
+        # TODO: Going to use self.person?
+        self.person = Person(s_result)
+        
+        # Set mousepointer to normal
+        myCursor= wx.StockCursor(wx.CURSOR_ARROW)
+        self.frame.SetCursor(myCursor)            
+        self.statusBar.SetStatusText('Ready')    
+    
     def OnClose(self, evt):
         self.Exit()
         
