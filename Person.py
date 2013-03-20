@@ -16,11 +16,13 @@ class Person(wx.Frame):
         self.frame = self.res.LoadFrame(None, 'framePerson')
         
         # Bind Controls
+        self.lblName = xrc.XRCCTRL(self.frame, 'lblName')
         self.txtBirthName = xrc.XRCCTRL(self.frame, 'txtBirthName')
         self.txtBirthDate = xrc.XRCCTRL(self.frame, 'txtBirthDate')
         self.txtBirthPlace = xrc.XRCCTRL(self.frame, 'txtBirthPlace')
         self.txtBio = xrc.XRCCTRL(self.frame, 'txtBio')
         
+        self.lblName.SetLabel("%s" % s_result['name'])
         try:
             self.txtBirthName.SetValue('%s' % s_result['birth name'])
         except Exception, e:
