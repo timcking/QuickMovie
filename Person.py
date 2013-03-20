@@ -17,12 +17,16 @@ class Person(wx.Frame):
         
         # Bind Controls
         self.lblName = xrc.XRCCTRL(self.frame, 'lblName')
+        self.bmpPic = xrc.XRCCTRL(self.frame, 'bmpPic') 
         self.txtBirthName = xrc.XRCCTRL(self.frame, 'txtBirthName')
         self.txtBirthDate = xrc.XRCCTRL(self.frame, 'txtBirthDate')
         self.txtBirthPlace = xrc.XRCCTRL(self.frame, 'txtBirthPlace')
         self.txtBio = xrc.XRCCTRL(self.frame, 'txtBio')
         
         self.lblName.SetLabel("%s" % s_result['name'])
+        self.bmpPic.SetBitmap(wx.Bitmap('Veronica.jpg'))
+        # self.bmpPic.SetBitmap(wx.Bitmap(s_result['headshot']))
+        
         try:
             self.txtBirthName.SetValue('%s' % s_result['birth name'])
         except Exception, e:
@@ -44,4 +48,7 @@ class Person(wx.Frame):
         except Exception, e:
             print "headshot not found"        
             
-        self.frame.Show()
+        self.frame.Show()        
+        
+    def OnClose(self, evt):
+        self.Close()    
