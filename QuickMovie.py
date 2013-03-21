@@ -39,14 +39,11 @@ class MyApp(wx.App):
         self.statusBar.SetStatusText('Ready')
         
         self.movieData = MovieData()
-        
         self.frame.Show()
         
     def get_movie(self, movie_id):
         # self.cboTitle.Clear()
-        myCursor= wx.StockCursor(wx.CURSOR_WAIT)
-        self.frame.SetCursor(myCursor)
-        self.statusBar.SetStatusText('Searching ...')
+        self.set_wait_state(True)
         
         s_result = self.movieData.get_movie_data(movie_id)
         
@@ -54,20 +51,16 @@ class MyApp(wx.App):
         # TODO: Cast, check for each null
         self.load_fields(s_result)
         
-        # Set mousepointer to normal
-        myCursor= wx.StockCursor(wx.CURSOR_ARROW)
-        self.frame.SetCursor(myCursor)            
-        self.statusBar.SetStatusText('Ready')    
+        self.set_wait_state(False)
 
     def search_movie (self, title):
-        myCursor= wx.StockCursor(wx.CURSOR_WAIT)
-        self.frame.SetCursor(myCursor)
-        self.statusBar.SetStatusText('Searching ...')
+        self.set_wait_state(True)
         
         # Search for a movie (get a list of Movie objects).
         try:
             s_result = self.movieData.search_movie_data(title)
         except Exception, e:
+            set_wait_state(False)
             # TODO
             print "Search failed"
             return
@@ -85,10 +78,7 @@ class MyApp(wx.App):
         
         self.load_fields(movie)
             
-        # Set mousepointer to normal
-        myCursor= wx.StockCursor(wx.CURSOR_ARROW)
-        self.frame.SetCursor(myCursor)            
-        self.statusBar.SetStatusText('Ready')    
+        self.set_wait_state(False)
         
     def load_fields(self, result):
         try:
@@ -148,9 +138,7 @@ class MyApp(wx.App):
         self.get_movie(movieID)
         
     def OnListCast(self, event):
-        myCursor= wx.StockCursor(wx.CURSOR_WAIT)
-        self.frame.SetCursor(myCursor)
-        self.statusBar.SetStatusText('Searching ...')
+        self.set_wait_state(True)
         
         selected = self.listCast.GetSelection()
         personID = self.dictCast[selected]
@@ -159,10 +147,17 @@ class MyApp(wx.App):
         # TODO: Going to use self.person?
         self.person = Person(s_result)
         
-        # Set mousepointer to normal
-        myCursor= wx.StockCursor(wx.CURSOR_ARROW)
-        self.frame.SetCursor(myCursor)            
-        self.statusBar.SetStatusText('Ready')    
+        self.set_wait_state(False)
+    
+    def set_wait_state(self, state):
+        if state == True:
+            myCursor= wx.StockCursor(wx.CURSOR_WAIT)
+            self.frame.SetCursor(myCursor)
+            self.statusBar.SetStatusText('Searching ...')            
+        else:
+            myCursor= wx.StockCursor(wx.CURSOR_ARROW)
+            self.frame.SetCursor(myCursor)            
+            self.statusBar.SetStatusText('Ready')               
     
     def OnClose(self, evt):
         self.Exit()
