@@ -17,8 +17,10 @@ class Person(wx.Frame):
         self.txtBirthDate = xrc.XRCCTRL(self.frame, 'txtBirthDate')
         self.txtBirthPlace = xrc.XRCCTRL(self.frame, 'txtBirthPlace')
         self.txtBio = xrc.XRCCTRL(self.frame, 'txtBio')
-        
         self.lblName.SetLabel("%s" % s_result['name'])
+        
+        # Bind Events
+        self.frame.Bind(wx.EVT_BUTTON, self.OnClose, id=xrc.XRCID('wxID_CLOSE'))
         
         # TODO, display headshot, see wxPython book
         # self.bmpPic.SetBitmap(wx.Bitmap('Veronica.jpg'))
@@ -49,4 +51,4 @@ class Person(wx.Frame):
         self.frame.Show()        
         
     def OnClose(self, evt):
-        self.Close()    
+        self.frame.Destroy()    
