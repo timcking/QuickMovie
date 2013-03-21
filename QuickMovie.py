@@ -91,11 +91,26 @@ class MyApp(wx.App):
         self.statusBar.SetStatusText('Ready')    
         
     def load_fields(self, result):
-        self.cboTitle.SetValue('%s' % result['title'])
-        self.txtYear.SetValue('%s' % result['year'])
-        self.txtDirector.SetValue('%s' % result['director'][0])
-        self.txtRunTime.SetValue('%s min' % result['runtime'][0])
-        self.txtPlot.SetValue('%s' % result['plot outline'])
+        try:
+            self.cboTitle.SetValue('%s' % result['title'])
+        except Exception, e:
+            print "title not found"        
+        try:
+            self.txtYear.SetValue('%s' % result['year'])
+        except Exception, e:
+            print "year not found"        
+        try:
+            self.txtDirector.SetValue('%s' % result['director'][0])
+        except Exception, e:
+            print "director not found"        
+        try:
+            self.txtRunTime.SetValue('%s min' % result['runtime'][0])
+        except Exception, e:
+            print "runtime not found"        
+        try:
+            self.txtPlot.SetValue('%s' % result['plot outline'])
+        except Exception, e:
+            print "plot not found"        
         
         index_count = 0
         for person in result['cast']:
