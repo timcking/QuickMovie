@@ -7,11 +7,6 @@ class Person(wx.Frame):
         self.res = xrc.XmlResource('Person.xrc')
         self.init_frame(s_result)
         
-    #def OnInit(self):
-        #self.res = xrc.XmlResource('Person.xrc')
-        #self.init_frame()
-        #return(True)    
-
     def init_frame(self, s_result):
         self.frame = self.res.LoadFrame(None, 'framePerson')
         
@@ -24,7 +19,10 @@ class Person(wx.Frame):
         self.txtBio = xrc.XRCCTRL(self.frame, 'txtBio')
         
         self.lblName.SetLabel("%s" % s_result['name'])
-        self.bmpPic.SetBitmap(wx.Bitmap('Veronica.jpg'))
+        
+        # TODO, display headshot, see wxPython book
+        # self.bmpPic.SetBitmap(wx.Bitmap('Veronica.jpg'))
+        # Below does not work
         # self.bmpPic.SetBitmap(wx.Bitmap(s_result['headshot']))
         
         try:
