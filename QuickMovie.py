@@ -67,7 +67,12 @@ class MyApp(wx.App):
         
         index_count = 0
         for title in s_result:
-            self.cboTitle.Append("%s, %s" % (title, title['year']))
+            try:
+                self.cboTitle.Append("%s, %s" % (title, title['year']))
+            except Exception, e:
+                print "year not found"               
+                self.cboTitle.Append("%s" % (title))
+                
             # Save for when box is clicked
             self.dictTitles[index_count] = title.movieID
             index_count += 1                    
