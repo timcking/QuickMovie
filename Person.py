@@ -17,6 +17,7 @@ class Person(wx.Frame):
         self.txtBirthDate = xrc.XRCCTRL(self.frame, 'txtBirthDate')
         self.txtBirthPlace = xrc.XRCCTRL(self.frame, 'txtBirthPlace')
         self.txtBio = xrc.XRCCTRL(self.frame, 'txtBio')
+        self.listTrivia = xrc.XRCCTRL(self.frame, 'listTrivia')
         self.lblName.SetLabel("%s" % s_result['name'])
         
         # Bind Events
@@ -47,6 +48,11 @@ class Person(wx.Frame):
             print s_result['headshot']
         except Exception, e:
             print "headshot not found"        
+        try:           
+            for item in s_result['trivia']:
+                self.listTrivia.Append('%s' % item)
+        except Exception, e:
+            print "trivia not found"             
             
         self.frame.Show()        
         
