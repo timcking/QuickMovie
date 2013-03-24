@@ -1,8 +1,10 @@
 import wx
 from wx import xrc
+from wx.lib.dialogs import ScrolledMessageDialog 
 
 class Person(wx.Frame):
-
+    dictTrivia = {}
+    
     def __init__(self, s_result):
         self.res = xrc.XmlResource('Person.xrc')
         self.init_frame(s_result)
@@ -22,6 +24,7 @@ class Person(wx.Frame):
         
         # Bind Events
         self.frame.Bind(wx.EVT_BUTTON, self.OnClose, id=xrc.XRCID('wxID_CLOSE'))
+        self.frame.Bind(wx.EVT_LISTBOX, self.OnListTriviaClick, id=xrc.XRCID('listTrivia'))
         
         # TODO, display headshot, see wxPython book
         # self.bmpPic.SetBitmap(wx.Bitmap('Veronica.jpg'))
@@ -55,6 +58,12 @@ class Person(wx.Frame):
             print "trivia not found"             
             
         self.frame.Show()        
+    
+    def OnListTriviaClick(self, evt):
+        # Note, using self.frame for ScrolledMessageDialog
+        # TODO: Need to use a dict for trivia
+        dialog = ScrolledMessageDialog (self.frame, 'Trivia Goes Here', 'Trivia', pos=wx.DefaultPosition, size=(450, 250))
+        result = dialog.ShowModal()         
         
     def OnClose(self, evt):
         self.frame.Destroy()    

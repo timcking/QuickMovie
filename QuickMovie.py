@@ -46,11 +46,9 @@ class MyApp(wx.App):
         self.set_wait_state(True)
         
         s_result = self.movieData.get_movie_data(movie_id)
-        
         print ("movie_id: %s" % (movie_id))
-        # TODO: Cast, check for each null
-        self.load_fields(s_result)
         
+        self.load_fields(s_result)
         self.set_wait_state(False)
 
     def search_movie (self, title):
@@ -108,11 +106,14 @@ class MyApp(wx.App):
             print "plot not found"        
         
         index_count = 0
-        for person in result['cast']:
-            self.listCast.Append('%s' % person['name'])
-            # Save for when cast is clicked
-            self.dictCast[index_count] = person.personID
-            index_count += 1                    
+        try:
+            for person in result['cast']:
+                self.listCast.Append('%s' % person['name'])
+                # Save for when cast is clicked
+                self.dictCast[index_count] = person.personID
+                index_count += 1                    
+        except Exception, e:
+            print "cast not found"           
             
     def clear_fields(self):
         self.txtDirector.SetValue('')
