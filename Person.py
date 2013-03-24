@@ -52,17 +52,28 @@ class Person(wx.Frame):
         except Exception, e:
             print "headshot not found"        
         try:           
+            index_count = 0
             for item in s_result['trivia']:
                 self.listTrivia.Append('%s' % item)
+                # Save for when trivia is clicked
+                self.dictTrivia[index_count] = item
+                index_count += 1                    
         except Exception, e:
             print "trivia not found"             
             
         self.frame.Show()        
     
     def OnListTriviaClick(self, evt):
-        # Note, using self.frame for ScrolledMessageDialog
-        # TODO: Need to use a dict for trivia
-        dialog = ScrolledMessageDialog (self.frame, 'Trivia Goes Here', 'Trivia', pos=wx.DefaultPosition, size=(450, 250))
+        selected = self.listTrivia.GetSelection()
+        trivia = self.dictTrivia[selected]
+        
+        dialog = ScrolledMessageDialog (self.frame, trivia, 'Trivia', pos=wx.DefaultPosition, size=(450, 250))
+        
+        # Change the font from 8 (default) to 10
+        children = dialog.GetChildren() 
+        textCtrl = children[0] 
+        textCtrl.SetFont(wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False)) 
+        
         result = dialog.ShowModal()         
         
     def OnClose(self, evt):
