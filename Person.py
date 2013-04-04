@@ -55,9 +55,8 @@ class Person(wx.Frame):
             data = fp.read()
             fp.close()
             img = wx.ImageFromStream(StringIO(data))            
-            # self.bmpPic.SetBitmap(wx.Bitmap(img))
-            # TODO, no error but doesn't work
-            self.bmpPic = wx.Bitmap('Veronica.jpg')
+            bmp = wx.BitmapFromImage(img)
+            self.bmpPic.SetBitmap(bmp)            
         except Exception, e:
             print "headshot not found"        
         try:           
