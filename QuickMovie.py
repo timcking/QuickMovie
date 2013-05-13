@@ -19,7 +19,6 @@ class MyApp(wx.App):
         self.frame.SetIcon(self.favicon)    
 
         # Setup Notebook (tabs)
-        # self.notebook = xrc.Notebook(self.frame, -1, style = 0)
         self.notebook = xrc.XRCCTRL(self.frame, 'notebook')
         self.tabMovie = xrc.XRCCTRL(self.notebook, 'tabMovie')
         self.tabActor = xrc.XRCCTRL(self.notebook, 'tabActor')
