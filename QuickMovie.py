@@ -8,7 +8,7 @@ class MyApp(wx.App):
     dictCast = {}
     
     def OnInit(self):
-        self.res = xrc.XmlResource('QuickMovie.xrc')
+        self.res = xrc.XmlResource('QuickMovieTab.xrc')
         self.init_frame()
         return(True)
 
@@ -18,16 +18,22 @@ class MyApp(wx.App):
         self.favicon = wx.Icon('film.ico', wx.BITMAP_TYPE_ICO, 16, 16)
         self.frame.SetIcon(self.favicon)    
 
-        # Bind Controls
-        self.cboTitle = xrc.XRCCTRL(self.frame, 'cboTitle')
-        self.listCast = xrc.XRCCTRL(self.frame, 'listCast')
-        self.txtYear = xrc.XRCCTRL(self.frame, 'txtYear')
-        self.txtDirector = xrc.XRCCTRL(self.frame, 'txtDirector')
-        self.txtRunTime = xrc.XRCCTRL(self.frame, 'txtRunTime')
-        self.txtPlot = xrc.XRCCTRL(self.frame, 'txtPlot')
-        self.btnSearch = xrc.XRCCTRL(self.frame, 'btnSearch')
-        self.btnExit = xrc.XRCCTRL(self.frame, 'wxID_EXIT')
+        # Setup Notebook (tabs)
+        # self.notebook = xrc.Notebook(self.frame, -1, style = 0)
+        self.notebook = xrc.XRCCTRL(self.frame, 'notebook')
+        self.tabMovie = xrc.XRCCTRL(self.notebook, 'tabMovie')
+        self.tabActor = xrc.XRCCTRL(self.notebook, 'tabActor')
         self.statusBar = xrc.XRCCTRL(self.frame, 'statusBar')
+         
+        # Bind Controls
+        self.cboTitle = xrc.XRCCTRL(self.tabMovie, 'cboTitle')
+        self.listCast = xrc.XRCCTRL(self.tabMovie, 'listCast')
+        self.txtYear = xrc.XRCCTRL(self.tabMovie, 'txtYear')
+        self.txtDirector = xrc.XRCCTRL(self.tabMovie, 'txtDirector')
+        self.txtRuntime = xrc.XRCCTRL(self.tabMovie, 'txtRuntime')
+        self.txtPlot = xrc.XRCCTRL(self.tabMovie, 'txtPlot')
+        self.btnSearch = xrc.XRCCTRL(self.tabMovie, 'btnSearch')
+        self.btnExit = xrc.XRCCTRL(self.tabMovie, 'wxID_EXIT')
 
         # Bind Events
         self.frame.Bind(wx.EVT_BUTTON, self.OnClose, id=xrc.XRCID('wxID_EXIT'))
@@ -117,7 +123,7 @@ class MyApp(wx.App):
             
     def clear_fields(self):
         self.txtDirector.SetValue('')
-        self.txtRunTime.SetValue('')
+        self.txtRuntime.SetValue('')
         self.txtPlot.SetValue('')
         self.txtYear.SetValue('')
         self.listCast.Clear()
