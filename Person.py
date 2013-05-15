@@ -2,6 +2,7 @@ import wx
 from wx import xrc
 from wx.lib.dialogs import ScrolledMessageDialog
 import urllib
+import lxml
 from cStringIO import StringIO
 
 class Person(wx.Frame):

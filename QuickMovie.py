@@ -1,4 +1,5 @@
 import wx
+import lxml
 from wx import xrc
 from MovieData import MovieData
 from Person import Person
