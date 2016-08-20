@@ -5,7 +5,6 @@ from MovieData import MovieData
 from Person import Person
 
 class MyApp(wx.App):
-    dictTitles = {}
     dictCast = {}
     
     def OnInit(self):
@@ -47,17 +46,8 @@ class MyApp(wx.App):
         self.movieData = MovieData()
         self.frame.Show()
         
-    def get_movie(self, movie_id):
-        # self.cboTitle.Clear()
-        self.set_wait_state(True)
-        
-        s_result = self.movieData.get_movie_data(movie_id)
-        print ("movie_id: %s" % (movie_id))
-        
-        self.load_fields(s_result)
-        self.set_wait_state(False)
-
     def search_movie (self, title):
+        print "**** In search_movie ****"
         self.set_wait_state(True)
         
         # Search for a movie (get a list of Movie objects).
@@ -70,6 +60,8 @@ class MyApp(wx.App):
             return
         
         index_count = 0
+        self.cboTitle.Clear()
+        
         for title in s_result:
             try:
                 self.cboTitle.Append("%s, %s" % (title, title['year']))
@@ -77,8 +69,6 @@ class MyApp(wx.App):
                 print "year not found"               
                 self.cboTitle.Append("%s" % (title))
                 
-            # Save for when box is clicked
-            self.dictTitles[index_count] = title.movieID
             index_count += 1                    
         
         # For now, only display in the first result
@@ -86,7 +76,6 @@ class MyApp(wx.App):
         self.movieData.update_movie_data(movie)
         
         self.load_fields(movie)
-            
         self.set_wait_state(False)
         
     def load_fields(self, result):
@@ -103,7 +92,7 @@ class MyApp(wx.App):
         except Exception, e:
             print "director not found"        
         try:
-            self.txtRunTime.SetValue('%s min' % result['runtime'][0])
+            self.txtRuntime.SetValue('%s min' % result['runtimes'][0])
         except Exception, e:
             print "runtime not found"        
         try:
@@ -121,11 +110,15 @@ class MyApp(wx.App):
         except Exception, e:
             print "cast not found"           
             
+        # This fixed title not showing in combo
+        # Set to the first item
+        self.cboTitle.SetSelection(0)
+            
     def clear_fields(self):
-        self.txtDirector.SetValue('')
-        self.txtRuntime.SetValue('')
-        self.txtPlot.SetValue('')
-        self.txtYear.SetValue('')
+        self.txtDirector.Clear()
+        self.txtRuntime.Clear()
+        self.txtPlot.Clear()
+        self.txtYear.Clear()
         self.listCast.Clear()
          
     def OnSearchClick(self, event): 
@@ -134,7 +127,7 @@ class MyApp(wx.App):
             self.statusBar.SetStatusText("Title is required")
             self.cboTitle.SetFocus()       
         else:
-            self.cboTitle.Clear()
+            # self.cboTitle.Clear()
             self.search_movie(self.title)
      
     def OnTitleChange(self, event): 
@@ -144,10 +137,16 @@ class MyApp(wx.App):
         event.Skip()    
         
     def OnComboTitles(self, event):
-        selected = self.cboTitle.GetSelection()
-        movieID = self.dictTitles[selected]
+        print "**** In OnComboTitles ****"
+        
+        self.title = self.cboTitle.GetValue()
+        
+        # Remove comma and date
+        self.title = self.title.rsplit(',', 1)[0]
+        print self.title
+        
         self.clear_fields()
-        self.get_movie(movieID)
+        self.search_movie(self.title)
         
     def OnListCast(self, event):
         self.set_wait_state(True)
@@ -156,7 +155,6 @@ class MyApp(wx.App):
         personID = self.dictCast[selected]
         
         s_result = self.movieData.get_person_data(personID)
-        # TODO: Going to use self.person?
         self.person = Person(s_result)
         
         self.set_wait_state(False)
